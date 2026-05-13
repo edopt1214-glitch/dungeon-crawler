@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Dungeon Crawler</title>
+  <link rel="icon" type="image/svg+xml" href="ChatGPT%20Image%20May%201%2C%202026%2C%2003_22_11%20PM.svg">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ── Loading Screen ───────────────────────────────────── -->
+  <div id="loading-screen">
+    <div class="lc-corner lc-tl"></div>
+    <div class="lc-corner lc-tr"></div>
+    <div class="lc-corner lc-bl"></div>
+    <div class="lc-corner lc-br"></div>
+    <div class="lc-edge lc-et"></div>
+    <div class="lc-edge lc-eb"></div>
+    <div class="lc-edge lc-el"></div>
+    <div class="lc-edge lc-er"></div>
+    <div class="lc-scan"></div>
+    <div class="lc-body">
+      <div class="lc-emblem">⚔</div>
+      <h1 class="lc-title">DUNGEON CRAWLER</h1>
+      <p class="lc-sub">A &nbsp; D E S C E N T &nbsp; I N T O &nbsp; D A R K N E S S</p>
+      <div class="lc-pct" id="lc-pct">0%</div>
+      <div class="lc-bar-row">
+        <span class="lc-arrow">▶</span>
+        <div class="lc-bar-track">
+          <div class="lc-bar-fill" id="lc-bar-fill"></div>
+          <div class="lc-bar-shine"></div>
+        </div>
+        <span class="lc-arrow">◀</span>
+      </div>
+      <div class="lc-status" id="lc-status">INITIALISING SYSTEMS</div>
+    </div>
+  </div>
+
+  <!-- ── Start Menu ───────────────────────────────────────── -->
+  <div id="start-menu" class="sm-hidden">
+    <div class="sm-bg"></div>
+    <div id="sm-particles"></div>
+    <div class="sm-col sm-col-l"></div>
+    <div class="sm-col sm-col-r"></div>
+    <div class="sm-torch sm-torch-l"></div>
+    <div class="sm-torch sm-torch-r"></div>
+    <div class="sm-content">
+
+      <div class="sm-title-panel">
+        <div class="sm-deco-row">
+          <span class="sm-gem">◆</span>
+          <span class="sm-deco-line"></span>
+          <span class="sm-gem">◆</span>
+        </div>
+        <div class="sm-panel-inner">
+          <div class="sm-sword-icon">⚔</div>
+          <h1 class="sm-title">DUNGEON<br>CRAWLER</h1>
+          <div class="sm-tagline">Darkness waits below.</div>
+        </div>
+        <div class="sm-deco-row">
+          <span class="sm-gem">◆</span>
+          <span class="sm-deco-line"></span>
+          <span class="sm-gem">◆</span>
+        </div>
+      </div>
+
+      <div class="sm-btn-panel">
+        <button class="sm-btn-play" id="sm-play">
+          <span class="sm-play-ring"></span>
+          <span class="sm-play-text"><span class="sm-btn-icon">&#9654;</span> BEGIN DESCENT</span>
+        </button>
+        <button class="sm-btn-stone" id="sm-continue-btn">
+          <span class="sm-btn-icon">&#x21BA;</span> Continue Game
+        </button>
+        <button class="sm-btn-stone" id="sm-controls-btn">
+          <span class="sm-btn-icon">&#x3F;</span> How to Play
+        </button>
+        <button class="sm-btn-stone" id="sm-exit-btn">
+          <span class="sm-btn-icon">&#x2715;</span> Exit Game
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── Game ─────────────────────────────────────────────── -->
+  <div id="app">
+    <div id="left-sidebar">
+      <div id="keys-panel">
+        <div class="panel-title">Controls</div>
+        <div class="keys-list">
+          <span>Move: Arrows / WASD / hjkl</span>
+          <span>Diagonals: yubn / numpad</span>
+          <span>Wait: Space / .</span>
+          <span>Pick up: g</span>
+          <span>Inventory: i</span>
+          <span>Descend: &gt;</span>
+        </div>
+      </div>
+      <div id="monster-panel">
+        <div class="panel-title">Floor Enemies</div>
+        <div id="monster-info"></div>
+      </div>
+      <div id="message-log"></div>
+    </div>
+    <div id="game-area">
+      <div id="stat-bar-mobile"></div>
+      <div id="canvas-wrapper">
+        <div id="pause-overlay"><span>⏸ PAUSED</span></div>
+        <div id="game-menu-mob">
+          <button id="btn-pause-mob" title="Pause / Resume">⏸</button>
+          <button id="btn-restart-mob" title="Restart">↺</button>
+          <button id="btn-menu-mob" title="Main Menu">⌂</button>
+        </div>
+        <div id="zoom-controls">
+          <button id="btn-zoom-in"  title="Zoom In (+)">＋</button>
+          <button id="btn-zoom-out" title="Zoom Out (−)">－</button>
+        </div>
+        <div id="gate-banner"></div>
+        <canvas id="game-canvas"></canvas>
+        <div id="dpad">
+          <button class="dpad-btn" data-dx="-1" data-dy="-1">↖</button>
+          <button class="dpad-btn" data-dx="0"  data-dy="-1">↑</button>
+          <button class="dpad-btn" data-dx="1"  data-dy="-1">↗</button>
+          <button class="dpad-btn" data-dx="-1" data-dy="0">←</button>
+          <button class="dpad-btn dpad-wait" data-action="wait">·</button>
+          <button class="dpad-btn" data-dx="1"  data-dy="0">→</button>
+          <button class="dpad-btn" data-dx="-1" data-dy="1">↙</button>
+          <button class="dpad-btn" data-dx="0"  data-dy="1">↓</button>
+          <button class="dpad-btn" data-dx="1"  data-dy="1">↘</button>
+        </div>
+      </div>
+      <div id="mobile-actions">
+        <button id="btn-pickup">Get (g)</button>
+        <button id="btn-inventory">Inv (i)</button>
+        <button id="btn-descend">Down (&gt;)</button>
+      </div>
+    </div>
+    <div id="sidebar">
+      <div id="game-menu">
+        <button class="gm-btn" id="btn-pause">⏸ Pause</button>
+        <button class="gm-btn" id="btn-menu">&#x2630; Menu</button>
+      </div>
+      <div id="stat-panel">
+        <div class="panel-title">Character</div>
+        <div id="stats"></div>
+      </div>
+      <div id="equip-panel">
+        <div class="panel-title">Equipment</div>
+        <div id="equipment"></div>
+      </div>
+      <div id="inv-panel">
+        <div class="panel-title">Inventory</div>
+        <div id="side-inventory"></div>
+      </div>
+      
+      
+    </div>
+  </div>
+
+  <!-- ── Dialogs ───────────────────────────────────────────── -->
+  <dialog id="inventory-dialog">
+    <div class="dialog-inner">
+      <h2>Inventory</h2>
+      <div id="inventory-list"></div>
+      <div class="dialog-hint">Press letter to use/equip · Esc to close</div>
+      <button id="close-inventory" class="secondary-btn">Close</button>
+    </div>
+  </dialog>
+
+  <dialog id="game-over-dialog">
+    <div class="dialog-inner">
+      <h2 id="game-over-title">Game Over</h2>
+      <div id="game-over-stats"></div>
+      <div id="highscore-list"></div>
+      <div class="go-btn-row">
+        <button id="restart-btn" class="primary-btn">Play Again</button>
+        <button id="restart-floor1-btn" class="secondary-btn">↺ Floor 1</button>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="floor-complete-dialog">
+    <div class="dialog-inner fc-inner">
+      <div id="fc-badge-row" class="fc-badge-row"></div>
+      <h2 id="fc-title">Floor Cleared!</h2>
+      <div id="fc-achievements" class="fc-achievements"></div>
+      <div id="fc-stats" class="fc-stats"></div>
+      <div id="fc-shop" class="fc-shop"></div>
+      <div class="fc-btn-row">
+        <button id="fc-next-btn" class="primary-btn">Next Floor &#9654;</button>
+        <button id="fc-restart-btn" class="secondary-btn">&#8617; Restart</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- ── Game Menu Modal ──────────────────────────────────── -->
+  <dialog id="game-menu-dialog">
+    <div class="dialog-inner gmd-inner">
+      <div class="gmd-header">
+        <h2 class="gmd-title">&#x2630; Menu</h2>
+        <button id="gmd-close-btn" class="gmd-x-btn" title="Resume">&#x2715;</button>
+      </div>
+
+      <!-- Stats row -->
+      <div class="gmd-section">
+        <div class="gmd-section-title">&#x1F4CA; Statistics</div>
+        <div id="gmd-bank-row" class="gmd-bank-row"></div>
+        <table class="sd-table gmd-stats-table">
+          <thead>
+            <tr><th>Floor</th><th>Attempted</th><th>Completed</th><th>Deaths</th></tr>
+          </thead>
+          <tbody id="gmd-stats-body"></tbody>
+        </table>
+        <div id="gmd-victories" class="sd-victories"></div>
+      </div>
+
+      <!-- Shop row -->
+      <div class="gmd-section">
+        <div class="gmd-section-title">&#x1F6D2; Shop</div>
+        <div class="gmd-gold-row">
+          Gold: <span id="gmd-gold-val" class="gmd-gold-val">0g</span>
+        </div>
+        <div id="gmd-shop" class="gmd-shop-list"></div>
+      </div>
+
+      <div class="gmd-btn-row">
+        <button id="gmd-home-btn" class="secondary-btn">&#x2302; Back to Home</button>
+        <button id="btn-saveload" class="secondary-btn">💾 Save / Load</button>
+        <button id="btn-restart" class="secondary-btn">&#x21BA; Restart</button>
+        <button id="gmd-resume-btn" class="primary-btn">&#x25BA; Resume Game</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- ── Stats Dialog ─────────────────────────────────────── -->
+  <dialog id="stats-dialog">
+    <div class="dialog-inner sd-inner">
+      <h2>Statistics</h2>
+      <div id="sd-gold-row" class="sd-gold-row"></div>
+      <table class="sd-table">
+        <thead>
+          <tr><th>Floor</th><th>Attempted</th><th>Completed</th><th>Deaths</th></tr>
+        </thead>
+        <tbody id="sd-table-body"></tbody>
+      </table>
+      <div id="sd-victories" class="sd-victories"></div>
+      <div class="sd-btn-row">
+        <button id="sd-close-btn" class="secondary-btn">Close</button>
+        <button id="sd-exit-btn" class="primary-btn">Exit Game</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- ── How to Play Dialog ──────────────────────────────── -->
+  <dialog id="howtoplay-dialog">
+    <div class="dialog-inner htp-inner">
+      <h2>&#x3F; How to Play</h2>
+      <div class="htp-rows">
+        <div class="htp-row"><span class="htp-action">Move</span><span class="htp-keys">Arrows · WASD · hjkl</span></div>
+        <div class="htp-row"><span class="htp-action">Diagonals</span><span class="htp-keys">yubn · Numpad</span></div>
+        <div class="htp-row"><span class="htp-action">Wait</span><span class="htp-keys">Space · .</span></div>
+        <div class="htp-row"><span class="htp-action">Pick up</span><span class="htp-keys">g (auto on move)</span></div>
+        <div class="htp-row"><span class="htp-action">Inventory</span><span class="htp-keys">i</span></div>
+        <div class="htp-row"><span class="htp-action">Descend</span><span class="htp-keys">&gt;</span></div>
+        <div class="htp-row"><span class="htp-action">Zoom In / Out</span><span class="htp-keys">+ / −  ·  0 to reset</span></div>
+      </div>
+      <div class="htp-footer">
+        <button id="htp-close-btn" class="primary-btn">Got it!</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- ── Save / Load Dialog ──────────────────────────────── -->
+  <dialog id="saveload-dialog">
+    <div class="dialog-inner sl-inner">
+      <h2>💾 Save / Load</h2>
+      <div id="sl-slots"></div>
+      <div class="sl-footer">
+        <button id="sl-close-btn" class="secondary-btn">Close</button>
+      </div>
+    </div>
+  </dialog>
+
+  <script src="js/bundle.js"></script>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Snakes &amp; Ladders</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div id="app">
+    <header id="topbar">
+      <h1>Snakes &amp; Ladders</h1>
+      <div id="topbar-controls">
+        <label>Theme
+          <select id="themeSelect">
+            <option value="classic">Classic</option>
+            <option value="jungle">Jungle</option>
+            <option value="space">Space</option>
+            <option value="candy">Candy</option>
+          </select>
+        </label>
+        <label>Board
+          <select id="sizeSelect">
+            <option value="8">8 x 8</option>
+            <option value="10" selected>10 x 10</option>
+            <option value="12">12 x 12</option>
+          </select>
+        </label>
+        <button id="newGameBtn">New Game</button>
+        <button id="muteBtn" title="Mute">&#128266;</button>
+      </div>
+    </header>
+
+    <main id="main">
+      <aside id="leftPanel">
+        <div id="playersPanel"></div>
+        <div id="logPanel"><h3>Event Log</h3><ul id="logList"></ul></div>
+      </aside>
+
+      <div id="stageWrap">
+        <div id="stage">
+          <canvas id="boardCanvas"></canvas>
+          <canvas id="overlayCanvas"></canvas>
+          <canvas id="piecesCanvas"></canvas>
+          <div id="toast"></div>
+        </div>
+      </div>
+
+      <aside id="rightPanel">
+        <div id="dicePanel">
+          <div id="dieFace">-</div>
+          <button id="rollBtn" disabled>Roll Dice</button>
+        </div>
+        <div id="powerupPanel"><h3>Power-ups</h3><div id="powerupList"></div></div>
+        <div id="achievementsPanel"><h3>Achievements</h3><div id="achievementsList"></div></div>
+      </aside>
+    </main>
+
+    <div id="menuOverlay" class="overlay">
+      <div class="menu-card">
+        <h2>New Game</h2>
+        <div id="slotConfig"></div>
+        <div class="menu-row">
+          <label>Board size
+            <select id="menuSize">
+              <option value="8">8 x 8</option>
+              <option value="10" selected>10 x 10</option>
+              <option value="12">12 x 12</option>
+            </select>
+          </label>
+          <label>Theme
+            <select id="menuTheme">
+              <option value="classic">Classic</option>
+              <option value="jungle">Jungle</option>
+              <option value="space">Space</option>
+              <option value="candy">Candy</option>
+            </select>
+          </label>
+        </div>
+        <div class="menu-actions">
+          <button id="startGameBtn">Start Game</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="winOverlay" class="overlay hidden">
+      <div class="menu-card">
+        <h2 id="winTitle">Winner!</h2>
+        <p id="winSubtitle"></p>
+        <div class="menu-actions">
+          <button id="playAgainBtn">Play Again</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="pickerOverlay" class="overlay hidden">
+      <div class="menu-card">
+        <h2 id="pickerTitle">Pick a target</h2>
+        <p id="pickerSubtitle"></p>
+        <div id="pickerOptions"></div>
+        <div class="menu-actions">
+          <button id="pickerCancelBtn">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
